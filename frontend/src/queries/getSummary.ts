@@ -8,6 +8,7 @@ export function getSummary() {
       const response = await fetch('http://localhost:3000/containers/summary')
       return await response.json()
     },
+    refetchInterval: 10000
   }))
 }
 

@@ -5,3 +5,5 @@
 }
 
 @plugin "@tailwindcss/typography";
+
+@source inline("badge-success badge-error status-success status-error");

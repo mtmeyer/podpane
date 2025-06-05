@@ -4,10 +4,15 @@ import { StartIcon } from "../components/icons/Start"
 import { StopIcon } from "../components/icons/Stop"
 import { getContainerDetails } from "../queries/getContainerDetails"
 import { getStatusColour } from "../utils/status"
+import { restartContainer, stopContainer } from "../queries/mutateContainer"
+import { useQueryClient } from "@tanstack/solid-query"
 
 function Container() {
+  const queryClient = useQueryClient()
   const params = useParams()
   const state = getContainerDetails()
+  const { mutate: stopMutate } = stopContainer(queryClient)
+  const { mutate: restartMutate } = restartContainer(queryClient)
 
   if (state.isError) {
     return (
@@ -25,9 +30,9 @@ function Container() {
         <p class="mt-0 mb-0"><span class="font-bold">Container ID:{" "}</span>{params.id}</p>
       </div>
       <div class="flex gap-2">
-        <button class="btn btn-lg btn-neutral"><StartIcon /> Start</button>
-        <button class="btn btn-lg btn-neutral"><StopIcon /> Stop</button>
-        <button class="btn btn-lg btn-neutral"><RestartIcon /> Restart</button>
+        <button disabled={state.data?.state === "running"} class="btn btn-lg btn-neutral" onClick={() => restartMutate()}><StartIcon /> Start</button>
+        <button disabled={state.data?.state === "exited"} class="btn btn-lg btn-neutral" onClick={() => stopMutate()}><StopIcon /> Stop</button>
+        <button class="btn btn-lg btn-neutral" onClick={() => restartMutate()}><RestartIcon /> Restart</button>
       </div>
       <div class="border border-neutral shadow rounded-md p-6 bg-base-200">
         <h2 class="mt-0">Summary</h2>
@@ -57,7 +62,7 @@ function Container() {
           </tbody>
         </table>
       </div>
-    </div>
+    </div >
   )
 }
 

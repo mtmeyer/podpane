@@ -27,6 +27,8 @@ func main() {
 
 	app.Get("/containers/summary", handlers.GetSummaryHandler(dockerClient))
 	app.Get("/containers/:id", handlers.GetContainerDetails(dockerClient))
+	app.Post("/containers/:id/stop", handlers.StopContainerHandler(dockerClient))
+	app.Post("/containers/:id/restart", handlers.RestartContainerHandler(dockerClient))
 
 	log.Fatal(app.Listen(":3000"))
 }

@@ -40,3 +40,24 @@ func GetContainerDetails(client *docker.Client, containerId string) (*docker.Con
 
 	return details, nil
 }
+
+func RestartContainer(client *docker.Client, containerId string) error {
+	err := client.RestartContainer(containerId, 30)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func StopContainer(client *docker.Client, containerId string) error {
+	err := client.StopContainer(containerId, 30)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}

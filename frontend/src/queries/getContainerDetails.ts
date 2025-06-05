@@ -10,6 +10,7 @@ export function getContainerDetails() {
       const response = await fetch(`http://localhost:3000/containers/${params.id}`)
       return await response.json()
     },
+    refetchInterval: 10000
   }))
 }
 

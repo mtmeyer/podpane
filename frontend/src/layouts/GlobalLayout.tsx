@@ -19,7 +19,7 @@ function GlobalLayout(props: { children: JSX.Element }) {
   return (
     <div class="flex flex-col w-full prose max-w-none min-h-screen h-full">
       <header class="pl-6 pt-5">
-        <h1>Docker manager</h1>
+        <A href="/" class="no-underline hover:underline"><h1 class="w-fit">Docker manager</h1></A>
       </header>
       <div class="flex flex-1 w-full gap-8">
         <ul class="flex flex-col p-0 my-0 max-w-[280px] w-full px-4 border-r border-neutral h-full grow font-bold">
