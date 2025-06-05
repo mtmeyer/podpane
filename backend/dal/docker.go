@@ -8,7 +8,7 @@ import (
 )
 
 func CreateDockerClient() (*docker.Client, error) {
-	client, err := docker.NewClient("unix:///var/run/docker.sock")
+	client, err := docker.NewClientFromEnv()
 	if err != nil {
 		fmt.Println("Unable to create docker client")
 		return nil, err

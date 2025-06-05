@@ -1,4 +1,14 @@
+import { getSummary } from "../queries/getSummary"
+
 function HomePage() {
+  const state = getSummary()
+
+  if (state.error) {
+    return (
+      <h1>Something went wrong...</h1>
+    )
+  }
+
   return (
     <div>
       <h2 class="mt-0">Summary</h2>
@@ -6,19 +16,19 @@ function HomePage() {
         <div class="stats shadow border border-neutral bg-base-200">
           <div class="stat">
             <div class="stat-title">All containers</div>
-            <div class="stat-value text-primary">21</div>
+            <div class="stat-value text-primary">{state.data?.containerCount}</div>
           </div>
         </div>
         <div class="stats shadow border border-neutral bg-base-200">
           <div class="stat">
             <div class="stat-title">Running containers</div>
-            <div class="stat-value text-secondary">19</div>
+            <div class="stat-value text-secondary">{state.data?.runningCount}</div>
           </div>
         </div>
         <div class="stats shadow border border-neutral bg-base-200">
           <div class="stat">
             <div class="stat-title">Exited containers</div>
-            <div class="stat-value text-accent">4</div>
+            <div class="stat-value text-accent">{state.data?.exitedCount}</div>
           </div>
         </div>
       </section>
