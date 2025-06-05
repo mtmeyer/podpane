@@ -5,7 +5,7 @@ import (
 	"docker-manager/utils"
 
 	docker "github.com/fsouza/go-dockerclient"
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 type ContainerPorts struct {
@@ -32,7 +32,7 @@ type GetSummaryResponse struct {
 func GetSummaryHandler(client *docker.Client) HandlerFunction {
 	return HandlerFunction(
 		RouteHandler(
-			func(c fiber.Ctx) error {
+			func(c *fiber.Ctx) error {
 				summary, err := dal.ListContainers(client)
 
 				if err != nil {

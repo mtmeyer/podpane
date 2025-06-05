@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/log"
+	"github.com/gofiber/contrib/websocket"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 )
 
-type HandlerFunction func(c fiber.Ctx) error
+type HandlerFunction func(c *fiber.Ctx) error
+type WSHandlerFunction func(c *websocket.Conn)
 
 type APIError struct {
 	StatusCode int `json:"statusCode"`
@@ -28,7 +30,7 @@ func NotFoundError(msg string) APIError {
 
 func RouteHandler(handler HandlerFunction) HandlerFunction {
 	return HandlerFunction(
-		func(ctx fiber.Ctx) error {
+		func(ctx *fiber.Ctx) error {
 			err := handler(ctx)
 
 			if err != nil {

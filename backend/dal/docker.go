@@ -2,9 +2,10 @@ package dal
 
 import (
 	"fmt"
+	"io"
 
 	docker "github.com/fsouza/go-dockerclient"
-	"github.com/gofiber/fiber/v3/log"
+	"github.com/gofiber/fiber/v2/log"
 )
 
 func CreateDockerClient() (*docker.Client, error) {
@@ -19,7 +20,6 @@ func CreateDockerClient() (*docker.Client, error) {
 
 func ListContainers(client *docker.Client) ([]docker.APIContainers, error) {
 	summary, err := client.ListContainers(docker.ListContainersOptions{All: true})
-	log.Debug("Response from docker")
 
 	if err != nil {
 		log.Debug(err)
@@ -60,4 +60,27 @@ func StopContainer(client *docker.Client, containerId string) error {
 
 	return nil
 
+}
+
+func TailLogs(client *docker.Client, containerId string) (*io.PipeReader, *io.PipeWriter, error) {
+	reader, writer := io.Pipe()
+
+	// Start the log streaming in a goroutine
+	go func() {
+		err := client.Logs(docker.LogsOptions{
+			Container:    containerId,
+			OutputStream: writer,
+			ErrorStream:  writer,
+			Follow:       true,
+			Stderr:       true,
+			Stdout:       true,
+		})
+
+		if err != nil {
+			// Write error to the pipe so the WebSocket can see it
+			writer.Write([]byte(fmt.Sprintf("Error tailing logs: %v\n", err)))
+		}
+	}()
+
+	return reader, writer, nil
 }

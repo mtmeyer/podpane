@@ -1,4 +1,6 @@
 import { useParams } from "@solidjs/router"
+import { createWS } from "@solid-primitives/websocket";
+import { createEventSignal } from "@solid-primitives/event-listener";
 import { RestartIcon } from "../components/icons/Restart"
 import { StartIcon } from "../components/icons/Start"
 import { StopIcon } from "../components/icons/Stop"
@@ -6,6 +8,7 @@ import { getContainerDetails } from "../queries/getContainerDetails"
 import { getStatusColour } from "../utils/status"
 import { restartContainer, stopContainer } from "../queries/mutateContainer"
 import { useQueryClient } from "@tanstack/solid-query"
+import { createEffect, createSignal } from "solid-js";
 
 function Container() {
   const queryClient = useQueryClient()
@@ -13,6 +16,16 @@ function Container() {
   const state = getContainerDetails()
   const { mutate: stopMutate } = stopContainer(queryClient)
   const { mutate: restartMutate } = restartContainer(queryClient)
+  const [logs, setLogs] = createSignal<string[]>([])
+
+
+  const ws = createWS(`ws://localhost:3000/ws/${params.id}/logs`);
+  const messageEvent = createEventSignal(ws, "message");
+  const message = () => messageEvent().data;
+
+  createEffect(() => {
+    setLogs((a) => [...a, message()])
+  })
 
   if (state.isError) {
     return (
@@ -61,8 +74,11 @@ function Container() {
             </tr>
           </tbody>
         </table>
+        <div>
+          {logs().join(" ~~~ ")}
+        </div>
       </div>
-    </div >
+    </div>
   )
 }
 

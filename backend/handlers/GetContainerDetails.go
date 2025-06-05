@@ -6,13 +6,13 @@ import (
 	"net/http"
 
 	docker "github.com/fsouza/go-dockerclient"
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 func GetContainerDetails(client *docker.Client) HandlerFunction {
 	return HandlerFunction(
 		RouteHandler(
-			func(c fiber.Ctx) error {
+			func(c *fiber.Ctx) error {
 				containerId := c.Params("id")
 
 				details, err := dal.GetContainerDetails(client, containerId)
