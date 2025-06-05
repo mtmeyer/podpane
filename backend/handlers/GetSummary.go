@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"docker-manager/dal"
+	"docker-manager/utils"
 
 	docker "github.com/fsouza/go-dockerclient"
 	"github.com/gofiber/fiber/v3"
@@ -11,14 +12,14 @@ type ContainerPorts struct {
 }
 
 type ContainerSummary struct {
-	ID      string           `json:"id"`
-	Command string           `json:"command"`
-	Created int64            `json:"created"`
-	Status  string           `json:"status"`
-	State   string           `json:"state"`
-	Ports   []docker.APIPort `json:"ports"`
-	Names   []string         `json:"names"`
-	Image   string           `json:"image"`
+	ID      string   `json:"id"`
+	Command []string `json:"command"`
+	Created int64    `json:"created"`
+	Status  string   `json:"status"`
+	State   string   `json:"state"`
+	Ports   []string `json:"ports"`
+	Name    string   `json:"name"`
+	Image   string   `json:"image"`
 }
 
 type GetSummaryResponse struct {
@@ -52,12 +53,12 @@ func GetSummaryHandler(client *docker.Client) HandlerFunction {
 
 					containers = append(containers, ContainerSummary{
 						ID:      container.ID,
-						Command: container.Command,
+						Command: []string{container.Command},
 						Created: container.Created,
 						Status:  container.Status,
 						State:   container.State,
-						Ports:   container.Ports,
-						Names:   container.Names,
+						Ports:   utils.TransformPortsToString(container.Ports),
+						Name:    container.Names[0],
 						Image:   container.Image,
 					})
 				}

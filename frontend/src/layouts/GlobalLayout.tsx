@@ -2,17 +2,7 @@ import { A, useMatch } from "@solidjs/router";
 import { getSummary } from "../queries/getSummary";
 import { createSignal, type JSX } from "solid-js";
 import { effect } from "solid-js/web";
-
-function getStatusColour(state: "exited" | "running") {
-  switch (state) {
-    case "exited":
-      return 'status-error'
-    case "running":
-      return 'status-success'
-    default:
-      return 'status-primary'
-  }
-}
+import { getStatusColour } from "../utils/status";
 
 function GlobalLayout(props: { children: JSX.Element }) {
   const state = getSummary()
@@ -36,8 +26,8 @@ function GlobalLayout(props: { children: JSX.Element }) {
           {state.data && state.data.containers.map(item => (
             <li class="list-none p-0">
               <A href={`/container/${item.id}`} class={`btn ${item.id !== selectedContainer() && 'btn-soft'} btn-secondary btn-wide`}>
-                <div aria-label="status" class={`status ${getStatusColour(item.state)}`}></div>
-                {item.names[0].replace(/^\//i, "")}
+                <div aria-label="status" class={`status status-${getStatusColour(item.state)}`}></div>
+                {item.name.replace(/^\//i, "")}
               </A>
             </li>
           ))}

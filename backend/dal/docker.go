@@ -28,3 +28,15 @@ func ListContainers(client *docker.Client) ([]docker.APIContainers, error) {
 
 	return summary, nil
 }
+
+func GetContainerDetails(client *docker.Client, containerId string) (*docker.Container, error) {
+	details, err := client.InspectContainerWithOptions(docker.InspectContainerOptions{
+		ID: containerId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return details, nil
+}

@@ -22,13 +22,11 @@ func main() {
 	}
 
 	app.Get("/status", func(c fiber.Ctx) error {
-		// Send a string response to the client
 		return c.SendString("Backend is running...")
 	})
 
-	// Define a route for the GET method on the root path '/'
 	app.Get("/containers/summary", handlers.GetSummaryHandler(dockerClient))
+	app.Get("/containers/:id", handlers.GetContainerDetails(dockerClient))
 
-	// Start the server on port 3000
 	log.Fatal(app.Listen(":3000"))
 }

@@ -1,16 +1,28 @@
+import { useParams } from "@solidjs/router"
 import { RestartIcon } from "../components/icons/Restart"
 import { StartIcon } from "../components/icons/Start"
 import { StopIcon } from "../components/icons/Stop"
+import { getContainerDetails } from "../queries/getContainerDetails"
+import { getStatusColour } from "../utils/status"
 
 function Container() {
+  const params = useParams()
+  const state = getContainerDetails()
+
+  if (state.isError) {
+    return (
+      <h1>Something went wrong...</h1>
+    )
+  }
+
   return (
     <div class="flex flex-col gap-6">
       <div class="flex flex-col">
         <div class="flex gap-4 items-center">
-          <h2 class="mt-0 mb-0">Container name</h2>
-          <div class="badge badge-soft badge-success">Running</div>
+          <h2 class="mt-0 mb-0">{state?.data?.name.replace(/^\//i, "")}</h2>
+          <div class={`badge badge-soft badge-${getStatusColour(state.data?.state)}`}>{state.data?.state}</div>
         </div>
-        <p class="mt-0 mb-0"><span class="font-bold">Container ID:{" "}</span>234832dfsa8r238f8389</p>
+        <p class="mt-0 mb-0"><span class="font-bold">Container ID:{" "}</span>{params.id}</p>
       </div>
       <div class="flex gap-2">
         <button class="btn btn-lg btn-neutral"><StartIcon /> Start</button>
@@ -23,23 +35,24 @@ function Container() {
           <tbody>
             <tr>
               <th>Image</th>
-              <td>nginx:latest</td>
+              <td>{state.data?.image}</td>
             </tr>
             <tr>
               <th>Command</th>
-              <td>npm run start</td>
+              <td>{state.data?.command}</td>
             </tr>
             <tr>
               <th>Created</th>
-              <td>4 mins ago</td>
+              <td>{state.data?.created}</td>
             </tr>
             <tr>
               <th>Status</th>
-              <td>Up 29 seconds</td>
+              <td>{state.data?.status}</td>
             </tr>
             <tr>
               <th>Ports</th>
-              <td>80:80</td>
+
+              <td class="flex flex-col gap-1">{state.data?.ports.map(port => <p class="mt-0 mb-0">{port}</p>)}</td>
             </tr>
           </tbody>
         </table>

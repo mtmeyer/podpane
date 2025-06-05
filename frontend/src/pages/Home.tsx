@@ -3,9 +3,15 @@ import { getSummary } from "../queries/getSummary"
 function HomePage() {
   const state = getSummary()
 
-  if (state.error) {
+  if (state.isError) {
     return (
       <h1>Something went wrong...</h1>
+    )
+  }
+
+  if (state.isLoading) {
+    return (
+      <h1>Loading...</h1>
     )
   }
 

@@ -17,6 +17,9 @@ importers:
       '@tanstack/solid-query':
         specifier: ^5.80.5
         version: 5.80.5(solid-js@1.9.7)
+      '@tanstack/solid-query-devtools':
+        specifier: ^5.80.5
+        version: 5.80.5(@tanstack/solid-query@5.80.5(solid-js@1.9.7))(solid-js@1.9.7)
       solid-js:
         specifier: ^1.9.5
         version: 1.9.7
@@ -497,6 +500,15 @@ packages:
 
   '@tanstack/query-core@5.80.5':
     resolution: {integrity: sha512-kFWXdQOUcjL/Ugk3GrI9eMuG3DsKBGaLIgyOLekR2UOrRrJgkLgPUNzZ10i8FCkfi4SgLABhOtQhx1HjoB9EZQ==}
+
+  '@tanstack/query-devtools@5.80.0':
+    resolution: {integrity: sha512-D6gH4asyjaoXrCOt5vG5Og/YSj0D/TxwNQgtLJIgWbhbWCC/emu2E92EFoVHh4ppVWg1qT2gKHvKyQBEFZhCuA==}
+
+  '@tanstack/solid-query-devtools@5.80.5':
+    resolution: {integrity: sha512-HIX3wbey7jP/fjHYChFUZ2F277g1XQzMX7Zj+8mQe5RMbOTZpCSIs1uk9MAaC/hD0nhVMbhNzdFTJMxnyCXykA==}
+    peerDependencies:
+      '@tanstack/solid-query': ^5.80.5
+      solid-js: ^1.6.0
 
   '@tanstack/solid-query@5.80.5':
     resolution: {integrity: sha512-T3bivnFC2EopTFosvu5C3fjqn2AI6U3UcQWsbNDFUGIilUpdQyiD59S1PIfHyS58ZSwDc24UNtwedKWL7xJPTw==}
@@ -1244,6 +1256,14 @@ snapshots:
       vite: 6.3.5(jiti@2.4.2)(lightningcss@1.30.1)
 
   '@tanstack/query-core@5.80.5': {}
+
+  '@tanstack/query-devtools@5.80.0': {}
+
+  '@tanstack/solid-query-devtools@5.80.5(@tanstack/solid-query@5.80.5(solid-js@1.9.7))(solid-js@1.9.7)':
+    dependencies:
+      '@tanstack/query-devtools': 5.80.0
+      '@tanstack/solid-query': 5.80.5(solid-js@1.9.7)
+      solid-js: 1.9.7
 
   '@tanstack/solid-query@5.80.5(solid-js@1.9.7)':
     dependencies:
