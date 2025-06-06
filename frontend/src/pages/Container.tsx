@@ -8,7 +8,9 @@ import { getContainerDetails } from "../queries/getContainerDetails"
 import { getStatusColour } from "../utils/status"
 import { restartContainer, stopContainer } from "../queries/mutateContainer"
 import { useQueryClient } from "@tanstack/solid-query"
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createMemo, createSignal } from "solid-js";
+import { LogViewer } from "../components/LogViewer";
+import { Card } from "../components/Card";
 
 function Container() {
   const queryClient = useQueryClient()
@@ -18,14 +20,23 @@ function Container() {
   const { mutate: restartMutate } = restartContainer(queryClient)
   const [logs, setLogs] = createSignal<string[]>([])
 
-
-  const ws = createWS(`ws://localhost:3000/ws/${params.id}/logs`);
-  const messageEvent = createEventSignal(ws, "message");
-  const message = () => messageEvent().data;
+  const ws = createMemo(() => createWS(`ws://localhost:3000/ws/${params.id}/logs`));
+  const messages = createEventSignal(ws, "message");
 
   createEffect(() => {
-    setLogs((a) => [...a, message()])
+    const messageEvent = messages();
+
+    if (messageEvent) {
+      setLogs(prev => [...prev, messageEvent.data]);
+    }
   })
+
+  createEffect(() => {
+    const currentId = params.id;
+    // Reset logs when ID changes
+    setLogs([]);
+    console.log(`Logs reset for ID: ${currentId}`);
+  });
 
   if (state.isError) {
     return (
@@ -47,7 +58,7 @@ function Container() {
         <button disabled={state.data?.state === "exited"} class="btn btn-lg btn-neutral" onClick={() => stopMutate()}><StopIcon /> Stop</button>
         <button class="btn btn-lg btn-neutral" onClick={() => restartMutate()}><RestartIcon /> Restart</button>
       </div>
-      <div class="border border-neutral shadow rounded-md p-6 bg-base-200">
+      <Card>
         <h2 class="mt-0">Summary</h2>
         <table class="table mb-0">
           <tbody>
@@ -69,15 +80,12 @@ function Container() {
             </tr>
             <tr>
               <th>Ports</th>
-
               <td class="flex flex-col gap-1">{state.data?.ports.map(port => <p class="mt-0 mb-0">{port}</p>)}</td>
             </tr>
           </tbody>
         </table>
-        <div>
-          {logs().join(" ~~~ ")}
-        </div>
-      </div>
+      </Card>
+      <LogViewer logs={logs()} />
     </div>
   )
 }

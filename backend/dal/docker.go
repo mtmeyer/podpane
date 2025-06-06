@@ -3,6 +3,7 @@ package dal
 import (
 	"fmt"
 	"io"
+	"time"
 
 	docker "github.com/fsouza/go-dockerclient"
 	"github.com/gofiber/fiber/v2/log"
@@ -65,6 +66,8 @@ func StopContainer(client *docker.Client, containerId string) error {
 func TailLogs(client *docker.Client, containerId string) (*io.PipeReader, *io.PipeWriter, error) {
 	reader, writer := io.Pipe()
 
+	since := time.Now().Add(-15 * time.Minute).Unix()
+
 	// Start the log streaming in a goroutine
 	go func() {
 		err := client.Logs(docker.LogsOptions{
@@ -74,6 +77,8 @@ func TailLogs(client *docker.Client, containerId string) (*io.PipeReader, *io.Pi
 			Follow:       true,
 			Stderr:       true,
 			Stdout:       true,
+			Since:        since,
+			Timestamps:   true,
 		})
 
 		if err != nil {

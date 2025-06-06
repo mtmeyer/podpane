@@ -66,7 +66,6 @@ func main() {
 			scanner := bufio.NewScanner(reader)
 			for scanner.Scan() {
 				line := scanner.Text()
-				log.Debug("Log line:", line)
 
 				if err = c.WriteMessage(websocket.TextMessage, []byte(line)); err != nil {
 					log.Error("WebSocket write error", err)
