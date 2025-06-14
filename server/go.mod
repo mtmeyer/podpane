@@ -1,4 +1,4 @@
-module docker-manager
+module github.com/mtmeyer/podpane
 
 go 1.24.2
 

@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"docker-manager/dal"
-	"docker-manager/utils"
+	"github.com/mtmeyer/podpane/dal"
+	"github.com/mtmeyer/podpane/utils"
 
 	docker "github.com/fsouza/go-dockerclient"
 	"github.com/gofiber/fiber/v2"

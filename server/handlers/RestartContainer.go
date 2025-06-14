@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"docker-manager/dal"
+	"github.com/mtmeyer/podpane/dal"
 	"net/http"
 
 	docker "github.com/fsouza/go-dockerclient"

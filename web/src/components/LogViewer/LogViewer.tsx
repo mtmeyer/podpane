@@ -7,7 +7,6 @@ type LogViewerProps = {
 }
 
 export function LogViewer(props: LogViewerProps) {
-  console.log("rerender")
   let container: HTMLDivElement | undefined;
 
   const scrollToBottom = () => {
@@ -21,7 +20,7 @@ export function LogViewer(props: LogViewerProps) {
     <Card>
       <div class="flex justify-between">
         <h2 class="mt-0">Container logs</h2>
-        <button class="btn btn-neutral" onClick={scrollToBottom}>Scroll to bottom <DownIcon /></button>
+        <button class="btn btn-neutral" onClick={scrollToBottom} disabled={props.logs.length === 0}>Scroll to bottom <DownIcon /></button>
       </div>
       <div class="h-[500px] overflow-scroll" ref={container}>
         {props.logs.map((log, i) => <LogLine log={log} lineNumber={i + 1} />)}

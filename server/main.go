@@ -2,8 +2,8 @@ package main
 
 import (
 	"bufio"
-	"docker-manager/dal"
-	"docker-manager/handlers"
+	"github.com/mtmeyer/podpane/dal"
+	"github.com/mtmeyer/podpane/handlers"
 
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"

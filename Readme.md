@@ -13,6 +13,7 @@ PodPane is designed to be simple to run and host yourself. An example `docker-co
 ```yaml
 services:
   frontend:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile.frontend
@@ -25,6 +26,7 @@ services:
       - VITE_API_URL=http://localhost:3000
 
   backend:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile.backend
