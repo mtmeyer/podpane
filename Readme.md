@@ -63,6 +63,7 @@ Here's what's planned for future development:
 - [ ] View Docker Compose stacks and config files
 - [ ] Improved log viewing with filtering and timestamps
 - [ ] Podman support for broader compatibility
+- [ ] Button to pull latest image and restart container
 
 ---
 

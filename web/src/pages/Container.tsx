@@ -9,6 +9,7 @@ import { useQueryClient } from "@tanstack/solid-query"
 import { createEffect, createMemo, createSignal, Suspense } from "solid-js";
 import { LogViewer } from "../components/LogViewer";
 import { Card } from "../components/Card";
+import { getServerUrl } from "../utils/getServerUrl";
 
 function Container() {
   const queryClient = useQueryClient()
@@ -18,7 +19,7 @@ function Container() {
   const { mutate: restartMutate } = restartContainer(queryClient)
   const [logs, setLogs] = createSignal<string[]>([])
 
-  const ws = createMemo(() => createWS(`ws://localhost:3000/ws/${params.id}/logs`));
+  const ws = createMemo(() => createWS(getServerUrl(`/ws/${params.id}/logs`, "ws")));
   const messages = createEventSignal(ws, "message");
 
   createEffect(() => {

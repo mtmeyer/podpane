@@ -22,3 +22,17 @@ tasks:
       - pnpm dev 
     silent: true
     dir: ./web
+
+  docker:build:*:
+    vars:
+      TAG: "{{index .MATCH 0}}"
+    cmds:
+      - docker build --platform=linux/amd64 -t mtmeyer/podpane-web:{{.TAG}} -f ./Dockerfile.web .
+      - docker build --platform=linux/amd64 -t mtmeyer/podpane-server:{{.TAG}} -f ./Dockerfile.server .
+
+  docker:push:*:
+    vars:
+      TAG: "{{index .MATCH 0}}"
+    cmds:
+      - docker push mtmeyer/podpane-web:{{.TAG}} 
+      - docker push mtmeyer/podpane-server:{{.TAG}} 

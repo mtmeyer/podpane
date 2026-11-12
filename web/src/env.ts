@@ -1,7 +1,7 @@
-import { object, string, parse } from 'valibot';
+import { object, string, optional, parse } from 'valibot';
 
 const EnvSchema = object({
-  VITE_API_URL: string(),
+  VITE_SERVER_PORT: optional(string()),
 });
 
 const env = parse(EnvSchema, import.meta.env)

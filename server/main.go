@@ -2,12 +2,14 @@ package main
 
 import (
 	"bufio"
+
 	"github.com/mtmeyer/podpane/dal"
 	"github.com/mtmeyer/podpane/handlers"
 
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
@@ -23,7 +25,23 @@ func main() {
 		log.Fatal(err)
 	}
 
-	app.Use("/ws", func(c *fiber.Ctx) error {
+	ws := app.Group("/ws")
+	rest := app.Group("/")
+
+	rest.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+	}))
+
+	rest.Get("/status", func(c *fiber.Ctx) error {
+		return c.SendString("Backend is running...")
+	})
+
+	rest.Get("/containers/summary", handlers.GetSummaryHandler(dockerClient))
+	rest.Get("/containers/:id", handlers.GetContainerDetails(dockerClient))
+	rest.Post("/containers/:id/stop", handlers.StopContainerHandler(dockerClient))
+	rest.Post("/containers/:id/restart", handlers.RestartContainerHandler(dockerClient))
+
+	ws.Use("/", func(c *fiber.Ctx) error {
 		// IsWebSocketUpgrade returns true if the client
 		// requested upgrade to the WebSocket protocol.
 		if websocket.IsWebSocketUpgrade(c) {
@@ -33,16 +51,7 @@ func main() {
 		return fiber.ErrUpgradeRequired
 	})
 
-	app.Get("/status", func(c *fiber.Ctx) error {
-		return c.SendString("Backend is running...")
-	})
-
-	app.Get("/containers/summary", handlers.GetSummaryHandler(dockerClient))
-	app.Get("/containers/:id", handlers.GetContainerDetails(dockerClient))
-	app.Post("/containers/:id/stop", handlers.StopContainerHandler(dockerClient))
-	app.Post("/containers/:id/restart", handlers.RestartContainerHandler(dockerClient))
-
-	app.Get("/ws/:id/logs", websocket.New(func(c *websocket.Conn) {
+	ws.Get("/:id/logs", websocket.New(func(c *websocket.Conn) {
 		containerId := c.Params("id")
 
 		reader, writer, err := dal.TailLogs(dockerClient, containerId)
